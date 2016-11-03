@@ -61,13 +61,6 @@ module BoshDeploymentResource
     attr_reader :bosh, :manifest, :writer
 
     def validate!(request)
-      request.fetch("source").fetch("deployment") { raise "source must include 'deployment'" }
-
-      deployment_name = request.fetch("source").fetch("deployment")
-      if manifest.name != deployment_name
-        raise "given deployment name '#{deployment_name}' does not match manifest name '#{manifest.name}'"
-      end
-
       case request.fetch("params")["cleanup"]
       when nil, true, false
       else

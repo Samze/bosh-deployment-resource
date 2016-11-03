@@ -207,28 +207,6 @@ describe "Out Command" do
   end
 
   context "with invalid inputs" do
-    it "errors if the given deployment name and the name in the manifest do not match" do
-      allow(manifest).to receive(:name).and_return("other-name")
-
-      in_dir do |working_dir|
-        expect do
-          command.run(working_dir, {
-            "source" => {
-              "target" => "http://bosh.example.com",
-              "username" => "bosh-user",
-              "password" => "bosh-password",
-              "deployment" => "bosh-deployment",
-            },
-            "params" => {
-              "manifest" => "deployment.yml",
-              "stemcells" => [],
-              "releases" => []
-            }
-          })
-        end.to raise_error /given deployment name 'bosh-deployment' does not match manifest name 'other-name'/
-      end
-    end
-
     it "errors when provided stemcells cannot be validated against the manifest" do
       allow(manifest).to receive(:validate_stemcells).and_raise("invalid")
 
@@ -240,25 +218,6 @@ describe "Out Command" do
         expect do
           command.run(working_dir, request)
         end.to raise_error "invalid"
-      end
-    end
-
-    it "requires a deployment" do
-      in_dir do |working_dir|
-        expect do
-          command.run(working_dir, {
-            "source" => {
-              "target" => "http://bosh.example.com",
-              "username" => "bosh-username",
-              "password" => "bosh-password",
-            },
-            "params" => {
-              "manifest" => "deployment.yml",
-              "stemcells" => [],
-              "releases" => []
-            }
-          })
-        end.to raise_error /source must include 'deployment'/
       end
     end
 
