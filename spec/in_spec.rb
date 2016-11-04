@@ -48,16 +48,13 @@ describe "In Command" do
         allow(bosh).to receive(:target).and_return("bosh-target")
       end
 
-      it "downloads the manifest" do
-        Dir.mktmpdir do |working_dir|
-          expect(bosh).to receive(:download_manifest).with("bosh-deployment", File.join(working_dir, "manifest.yml"))
-          command.run(working_dir, request)
-        end
+      it "does not try to download the manifest" do
+        expect(bosh).not_to receive(:download_manifest)
+        run_command
       end
 
       it "writes the target to a file called target" do
         Dir.mktmpdir do |working_dir|
-          expect(bosh).to receive(:download_manifest).with("bosh-deployment", File.join(working_dir, "manifest.yml"))
           command.run(working_dir, request)
 
           path = File.join(working_dir, "target")
